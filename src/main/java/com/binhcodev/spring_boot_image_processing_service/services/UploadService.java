@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.binhcodev.spring_boot_image_processing_service.dtos.request.TransformationRequest;
-import com.binhcodev.spring_boot_image_processing_service.entities.Image;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -56,15 +55,13 @@ public class UploadService {
         return Files.readAllBytes(filePath);
     }
 
-    public Image transformImage(String imageName, TransformationRequest transformationRequest) {
+    public String transformImage(String imageName, TransformationRequest transformationRequest) {
         Path filePath = Paths.get(uploadDir).resolve(imageName);
         try (InputStream is = Files.newInputStream(filePath)) {
             BufferedImage transformedImage = ImageIO.read(is);
-            Image image = new Image();
             String resizeName = transformationRequest.getResize().getWidth() + "x"
                     + transformationRequest.getResize().getHeight()
                     + "_" + imageName;
-            image.setName(resizeName);
 
             if (transformationRequest.getResize() != null && transformationRequest.getCrop() == null) {
                 transformedImage = Scalr.resize(transformedImage, Scalr.Method.ULTRA_QUALITY,
@@ -90,12 +87,11 @@ public class UploadService {
 
             try {
                 ImageIO.write(transformedImage, "png", Paths.get(uploadDir).resolve(resizeName).toFile());
-                image.setName(filePath.toString());
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to write transformed image", e);
             }
-            return image;
+            return resizeName;
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to transform image", e);

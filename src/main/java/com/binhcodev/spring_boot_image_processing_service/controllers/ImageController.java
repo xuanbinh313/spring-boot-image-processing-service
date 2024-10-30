@@ -48,7 +48,6 @@ public class ImageController {
             @RequestBody TransformationRequest transformationRequest) {
         Image image = imageService.transformImage(id, transformationRequest);
         return ResponseEntity.ok(image);
-        // return ResponseEntity.noContent().build();
 
     }
 }

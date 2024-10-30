@@ -27,7 +27,8 @@ public class ImageService {
 
     public Image transformImage(Long imageId, TransformationRequest transformationRequest) {
         Image image = getImageById(imageId);
-        Image transformImage = uploadService.transformImage(image.getName(), transformationRequest);
-        return transformImage;
+        String transformImage = uploadService.transformImage(image.getName(), transformationRequest);
+        Image newImage = Image.builder().name(transformImage).build();
+        return imageRepository.save(newImage);
     }
 }
