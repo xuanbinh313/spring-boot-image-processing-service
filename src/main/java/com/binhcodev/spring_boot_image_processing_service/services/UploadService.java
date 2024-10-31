@@ -40,11 +40,12 @@ public class UploadService {
                 e.printStackTrace();
             }
         }
-        String fileName = UUID.randomUUID().toString();
+        String typeFile = file.getContentType().split("/")[1];
+        String fileName = UUID.randomUUID().toString() + "." + typeFile;
         Path filePath = uploadPath.resolve(fileName);
         try (InputStream is = file.getInputStream()) {
             BufferedImage originalImage = ImageIO.read(is);
-            ImageIO.write(originalImage, "png", filePath.toFile());
+            ImageIO.write(originalImage, typeFile, filePath.toFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,11 +61,6 @@ public class UploadService {
         Path filePath = Paths.get(uploadDir).resolve(imageName);
         try (InputStream is = Files.newInputStream(filePath)) {
             BufferedImage transformedImage = ImageIO.read(is);
-            Image image = new Image();
-            String resizeName = transformationRequest.getResize().getWidth() + "x"
-                    + transformationRequest.getResize().getHeight()
-                    + "_" + imageName;
-            image.setName(resizeName);
 
             if (transformationRequest.getResize() != null && transformationRequest.getCrop() == null) {
                 transformedImage = Scalr.resize(transformedImage, Scalr.Method.ULTRA_QUALITY,
@@ -88,14 +84,15 @@ public class UploadService {
                         Scalr.Rotation.valueOf("CW_" + transformationRequest.getRotate()));
             }
 
+            String typeFile = imageName.split("\\.")[1];
+            String fileName = UUID.randomUUID().toString() + "." + typeFile;
             try {
-                ImageIO.write(transformedImage, "png", Paths.get(uploadDir).resolve(resizeName).toFile());
-                image.setName(filePath.toString());
+                ImageIO.write(transformedImage, typeFile, Paths.get(uploadDir).resolve(fileName).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to write transformed image", e);
             }
-            return image;
+            return Image.builder().name(fileName).build();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to transform image", e);
