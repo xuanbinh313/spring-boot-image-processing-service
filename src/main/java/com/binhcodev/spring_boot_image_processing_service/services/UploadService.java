@@ -57,7 +57,7 @@ public class UploadService {
         return Files.readAllBytes(filePath);
     }
 
-    public Image transformImage(String imageName, TransformationRequest transformationRequest) {
+    public String transformImage(String imageName, TransformationRequest transformationRequest) {
         Path filePath = Paths.get(uploadDir).resolve(imageName);
         try (InputStream is = Files.newInputStream(filePath)) {
             BufferedImage transformedImage = ImageIO.read(is);
@@ -88,11 +88,11 @@ public class UploadService {
             String fileName = UUID.randomUUID().toString() + "." + typeFile;
             try {
                 ImageIO.write(transformedImage, typeFile, Paths.get(uploadDir).resolve(fileName).toFile());
+                return fileName;
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to write transformed image", e);
             }
-            return Image.builder().name(fileName).build();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to transform image", e);
