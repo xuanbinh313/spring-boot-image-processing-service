@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.binhcodev.spring_boot_image_processing_service.dtos.request.TransformationRequest;
-import com.binhcodev.spring_boot_image_processing_service.entities.Image;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

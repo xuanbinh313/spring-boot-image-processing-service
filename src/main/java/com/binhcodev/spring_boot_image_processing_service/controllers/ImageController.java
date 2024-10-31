@@ -53,6 +53,5 @@ public class ImageController {
         TransformationMessage message = TransformationMessage.builder().imageId(id).transformationRequest(transformationRequest).build();
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY, message);
         return ResponseEntity.ok("Transformation request submitted");
-
     }
 }

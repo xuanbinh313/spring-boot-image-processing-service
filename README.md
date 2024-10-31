@@ -7,7 +7,10 @@ The following was discovered as part of building this project:
 
 ### Reference Documentation
 https://roadmap.sh/projects/image-processing-service
-
+#### Add docker
+```sh
+docker run -d --hostname rabbitmq-host --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+```
 
 DATABASE
 ```sql
